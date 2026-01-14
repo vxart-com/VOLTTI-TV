@@ -1,4 +1,4 @@
-// BANCO DE DADOS VOLTTI - LISTA COMPLETA
+// BANCO DE DADOS VOLTTI - TODOS OS TÍTULOS RECUPERADOS
 const conteudos = [
     // --- TERROR ---
     { titulo: "A Morte Pede Carona (2007)", capaID: "13hcPWKedhsuyKJjDnkA1OKsDBsqNQt9Q", videoID: "1Dv2kWhQBm1pp2QEWDmzgqQfK0Cs8bYlo", tipo: "filme", genero: "Terror" },
@@ -17,8 +17,14 @@ const conteudos = [
     { titulo: "Vingadores: Guerra Infinita", capaID: "1aEaxbcYemiRC25xrXMgGD5-6vfSKCHJK", videoID: "1sQ3RZ4-mJ3n5pt8TW16R0E1FO5NuDfzs", tipo: "filme", genero: "Marvel" },
     { titulo: "Vingadores: Ultimato", capaID: "1cmosS5uvNBgppGGkO4uLbytXyDu4WXmo", videoID: "1hpPF4WTbbjYNjLigkh0GTtLYviUR3s0s", tipo: "filme", genero: "Marvel" },
 
+    // --- SUSPENSE ---
+    { titulo: "Sem Saída", capaID: "1rZhZrrh5d8LXqBtcI5MCBMJ5gHYbyFPH", videoID: "1pH_Hj9TxMI4rz3fV5xyF22cLTNqsyW8T", tipo: "filme", genero: "Suspense" },
+    { titulo: "Vigiados", capaID: "18WxrSzD-ilSbtqF3ZCJ0Pumw1PsEbIGG", videoID: "1szU70220U5BeAKrq3nKQJfXEUSiE3Uhb", tipo: "filme", genero: "Suspense" },
+
     // --- ROMANCE / INFANTIL ---
     { titulo: "After 1", capaID: "1SM2PN1hPWL0Z_mQRFTVvMoPBwtqD9rtB", videoID: "1RZE1S_UCi9DA-Q-9DZIKTyQmuBNSPHQ_", tipo: "filme", genero: "Romance" },
+    { titulo: "After 2", capaID: "1CROr0ySxN7qjeMXr70nFEdqxG_XCelsz", videoID: "1WL6DAD7y0qJz7gU2Tri1DLgk7Dbhimus", tipo: "filme", genero: "Romance" },
+    { titulo: "After 3", capaID: "1Z7TTYmECxz9QDotu3fRfOiQhsOO8MFjx", videoID: "1TNmCJVNQCEUChOtZ69Ono4hsD61PUGl4", tipo: "filme", genero: "Romance" },
     { titulo: "Os Incríveis 2", capaID: "1e6Bl-HEJo4UnsJyBwqX0YfHYlnJZtwXd", videoID: "1KY21irLfkWynX3yY0RlnGG48helhCPKX", tipo: "filme", genero: "Infantil" },
 
     // --- DORAMAS ---
@@ -38,7 +44,6 @@ const listaEpsContainer = document.getElementById('lista-eps');
 let currentIndex = 0;
 let listaDeCards = []; 
 
-// 1. GERAÇÃO DO LAYOUT EM CATEGORIAS
 function renderizarTV() {
     grid.innerHTML = "";
     listaDeCards = [];
@@ -68,9 +73,13 @@ function renderizarTV() {
     if (listaDeCards.length > 0) listaDeCards[0].classList.add('active');
 }
 
-// 2. NAVEGAÇÃO POR CONTROLE REMOTO
 document.addEventListener('keydown', (e) => {
     if (listaDeCards.length === 0) return;
+
+    if (e.key === "ArrowUp") {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     listaDeCards[currentIndex].classList.remove('active');
 
     if (e.key === "ArrowRight" && currentIndex < listaDeCards.length - 1) {
@@ -83,16 +92,24 @@ document.addEventListener('keydown', (e) => {
     }
 
     listaDeCards[currentIndex].classList.add('active');
-    listaDeCards[currentIndex].scrollIntoView({ behavior: "smooth", inline: "center", block: "center" });
+    
+    listaDeCards[currentIndex].scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "center"
+    });
 });
 
-// 3. LOGICA DE ABRIR FILME OU SÉRIE
 function abrirConteudo(item) {
     const chave = "VOLTTI5";
     if (localStorage.getItem("voltti_chave") !== chave) {
-        const senha = prompt("Insira sua Chave Mensal:");
-        if (senha === chave) { localStorage.setItem("voltti_chave", chave); }
-        else { return; }
+        const senha = prompt("Chave Mensal VOLTTI:");
+        if (senha === chave) {
+            localStorage.setItem("voltti_chave", chave);
+        } else {
+            alert("Chave Incorreta!");
+            return;
+        }
     }
 
     if (item.episodios) {
@@ -102,25 +119,10 @@ function abrirConteudo(item) {
     }
 }
 
-// 4. FUNÇÃO DAR PLAY COM AUTOMATIZAÇÃO PARA TV
 function darPlayTV(id, titulo) {
-    // Carrega o vídeo com tentativa de autoplay
-    player.src = `https://drive.google.com/file/d/${id}/preview?autoplay=1`;
+    player.src = `https://drive.google.com/file/d/${id}/preview`;
     titleDisplay.innerText = titulo;
-    
-    // Sobe a tela automaticamente para o player (Foco no vídeo)
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Tenta colocar o iframe em Tela Cheia (Fullscreen)
-    setTimeout(() => {
-        if (player.requestFullscreen) {
-            player.requestFullscreen();
-        } else if (player.webkitRequestFullscreen) { /* Safari/Chrome TV */
-            player.webkitRequestFullscreen();
-        } else if (player.msRequestFullscreen) { /* IE11/Edge */
-            player.msRequestFullscreen();
-        }
-    }, 1000); // Aguarda 1 segundo para o carregamento do link
 }
 
 function exibirEpisodiosTV(serie) {
@@ -133,7 +135,6 @@ function exibirEpisodiosTV(serie) {
         btn.onclick = () => darPlayTV(ep.videoID, `${serie.titulo} - ${ep.nome}`);
         listaEpsContainer.appendChild(btn);
     });
-    // Começa o primeiro episódio automaticamente
     darPlayTV(serie.episodios[0].videoID, `${serie.titulo} - ${serie.episodios[0].nome}`);
 }
 
