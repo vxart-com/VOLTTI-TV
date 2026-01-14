@@ -1,60 +1,85 @@
-/* RESET E PADRÃO VOLTTI */
+/* 1. BASE CINEMATOGRÁFICA */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: #0f1014; color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow-x: hidden; }
-
-/* HEADER TRANSPARENTE ESTILO STREAMING */
-header {
-    height: 70px; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 4%; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-    position: fixed; width: 100%; top: 0; z-index: 1000; transition: background 0.5s;
+body { 
+    background: #050505; 
+    color: white; 
+    font-family: 'Segoe UI', sans-serif; 
+    overflow: hidden; /* Trava o scroll da página inteira */
 }
 
-.logo { color: #e50914; font-size: 1.8em; font-weight: bold; letter-spacing: 1px; cursor: pointer; }
-
-/* NAVEGAÇÃO */
-.nav-links { display: flex; list-style: none; gap: 20px; }
-.nav-links a { color: #e5e5e5; text-decoration: none; font-size: 0.85em; transition: 0.3s; }
-.nav-links a:hover { color: #b3b3b3; }
-
-/* ÁREA DO PLAYER (O DESTAQUE) */
-.hero-player { 
-    width: 100%; height: 70vh; position: relative; 
-    display: flex; flex-direction: column; justify-content: flex-end;
-    padding-bottom: 50px; background: #000;
+/* 2. CONTAINER PRINCIPAL */
+.tv-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
 }
-.player-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-.player-container iframe { width: 100%; height: 100%; }
 
-.player-info { 
-    position: relative; z-index: 2; padding-left: 4%; width: 50%;
-    background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
+/* 3. ÁREA DO VÍDEO (TOP) */
+.player-area {
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #111, #050505);
 }
-#video-title { font-size: 3em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-/* CARROSSEL ESTILO NETFLIX */
-.content-grid { margin-top: -50px; position: relative; z-index: 10; padding-left: 4%; }
-.genero-secao { margin-bottom: 35px; }
-.genero-titulo { font-size: 1.4vw; color: #e5e5e5; margin-bottom: 10px; font-weight: bold; }
-
-.genero-linha { 
-    display: flex; gap: 10px; overflow-x: scroll; overflow-y: hidden; 
-    padding: 10px 0 20px 0; scroll-behavior: smooth;
+#main-player {
+    width: 75%;
+    height: 80%;
+    border-radius: 12px;
+    border: 2px solid #222;
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
 }
-.genero-linha::-webkit-scrollbar { display: none; } /* Esconde a barra de rolagem */
 
-/* CARD NETFLIX */
-.card { 
-    min-width: 220px; position: relative; transition: transform 0.3s; 
-    cursor: pointer; border-radius: 4px; overflow: hidden;
+#video-title {
+    margin-top: 15px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #e50914; /* Vermelho VOLTTI */
 }
-.card:hover { transform: scale(1.1); z-index: 20; }
-.card img { width: 100%; height: 125px; object-fit: cover; }
-.card p { 
-    position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7);
-    font-size: 0.8em; padding: 5px; text-align: center; opacity: 0; transition: 0.3s;
-}
-.card:hover p { opacity: 1; }
 
-/* FOOTER */
-footer { padding: 50px; text-align: center; background: #0f1014; border-top: 1px solid #333; }
-.footer-links a { color: #808080; margin: 0 15px; text-decoration: none; font-size: 0.9em; }
+/* 4. TRILHO DE FILMES (BOTTOM) - ONDE ESTAVA O ERRO */
+.catalog-area {
+    height: 40%;
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+    gap: 25px;
+    overflow-x: hidden; /* Oculta a barra de rolagem */
+    white-space: nowrap; /* Força tudo a ficar em uma linha só */
+}
+
+/* 5. CARDS DOS FILMES */
+.focusable {
+    display: inline-block; /* Mantém um ao lado do outro */
+    min-width: 200px;
+    width: 200px;
+    height: 300px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    border: 4px solid transparent;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+/* EFEITO DE FOCO (CONTROLE REMOTO) */
+.focusable.active {
+    transform: scale(1.1);
+    border-color: #e50914;
+    box-shadow: 0 0 30px rgba(229, 9, 20, 0.4);
+    opacity: 1;
+    z-index: 10;
+}
+
+.focusable img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.focusable p {
+    display: none; /* Esconde o texto para focar na imagem como na Netflix */
+}
