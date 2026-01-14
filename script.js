@@ -1,4 +1,4 @@
-// BANCO DE DADOS VOLTTI - TODOS OS TÍTULOS RECUPERADOS
+// BANCO DE DADOS VOLTTI - CATÁLOGO COMPLETO
 const conteudos = [
     // --- TERROR ---
     { titulo: "A Morte Pede Carona (2007)", capaID: "13hcPWKedhsuyKJjDnkA1OKsDBsqNQt9Q", videoID: "1Dv2kWhQBm1pp2QEWDmzgqQfK0Cs8bYlo", tipo: "filme", genero: "Terror" },
@@ -44,6 +44,7 @@ const listaEpsContainer = document.getElementById('lista-eps');
 let currentIndex = 0;
 let listaDeCards = []; 
 
+// 1. GERAÇÃO DAS CATEGORIAS
 function renderizarTV() {
     grid.innerHTML = "";
     listaDeCards = [];
@@ -73,9 +74,11 @@ function renderizarTV() {
     if (listaDeCards.length > 0) listaDeCards[0].classList.add('active');
 }
 
+// 2. NAVEGAÇÃO E FOCO
 document.addEventListener('keydown', (e) => {
     if (listaDeCards.length === 0) return;
 
+    // Se apertar pra cima, foca visualmente no topo
     if (e.key === "ArrowUp") {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -92,14 +95,10 @@ document.addEventListener('keydown', (e) => {
     }
 
     listaDeCards[currentIndex].classList.add('active');
-    
-    listaDeCards[currentIndex].scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "center"
-    });
+    listaDeCards[currentIndex].scrollIntoView({ behavior: "smooth", inline: "center", block: "center" });
 });
 
+// 3. LOGICA DE ACESSO
 function abrirConteudo(item) {
     const chave = "VOLTTI5";
     if (localStorage.getItem("voltti_chave") !== chave) {
@@ -119,10 +118,20 @@ function abrirConteudo(item) {
     }
 }
 
+// 4. A GRANDE INOVAÇÃO: FOCO AUTOMÁTICO NO PLAYER
 function darPlayTV(id, titulo) {
     player.src = `https://drive.google.com/file/d/${id}/preview`;
     titleDisplay.innerText = titulo;
+    
+    // Sobe para o player
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Espera carregar o player e joga o foco do controle nele
+    setTimeout(() => {
+        player.focus();
+        // Avisa que o controle agora está no vídeo
+        console.log("Foco no player ativado. Pressione OK para Play.");
+    }, 1500); 
 }
 
 function exibirEpisodiosTV(serie) {
