@@ -36,14 +36,12 @@ const titleDisplay = document.getElementById('video-title');
 const listaEpsContainer = document.getElementById('lista-eps');
 
 let currentIndex = 0;
-let listaDeCards = []; // Para mapear a ordem de navegação
+let listaDeCards = []; 
 
-// 1. GERAÇÃO DO LAYOUT EM CATEGORIAS (PRATELEIRAS)
+// 1. GERAÇÃO DO LAYOUT EM CATEGORIAS
 function renderizarTV() {
     grid.innerHTML = "";
     listaDeCards = [];
-    
-    // Identifica os gêneros presentes
     const generos = [...new Set(conteudos.map(item => item.genero))];
 
     generos.forEach(gen => {
@@ -53,8 +51,6 @@ function renderizarTV() {
         
         const linha = document.createElement('div');
         linha.className = 'genero-linha';
-
-        // Filtra filmes por esse gênero
         const filmesDoGenero = conteudos.filter(i => i.genero === gen);
         
         filmesDoGenero.forEach(item => {
@@ -62,25 +58,19 @@ function renderizarTV() {
             card.className = "focusable";
             card.setAttribute('data-id', conteudos.indexOf(item));
             card.innerHTML = `<img src="https://drive.google.com/thumbnail?authuser=0&sz=w400&id=${item.capaID}">`;
-            
             linha.appendChild(card);
-            listaDeCards.push(card); // Adiciona na ordem de navegação
+            listaDeCards.push(card);
         });
-
         container.appendChild(linha);
         grid.appendChild(container);
     });
 
-    // Inicia o foco no primeiro card
-    if (listaDeCards.length > 0) {
-        listaDeCards[0].classList.add('active');
-    }
+    if (listaDeCards.length > 0) listaDeCards[0].classList.add('active');
 }
 
 // 2. NAVEGAÇÃO POR CONTROLE REMOTO
 document.addEventListener('keydown', (e) => {
     if (listaDeCards.length === 0) return;
-
     listaDeCards[currentIndex].classList.remove('active');
 
     if (e.key === "ArrowRight" && currentIndex < listaDeCards.length - 1) {
@@ -92,15 +82,8 @@ document.addEventListener('keydown', (e) => {
         abrirConteudo(conteudos[itemID]);
     }
 
-    // Coloca o foco no novo card
     listaDeCards[currentIndex].classList.add('active');
-    
-    // Faz o scroll suave para o item focado aparecer no centro da tela
-    listaDeCards[currentIndex].scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "center"
-    });
+    listaDeCards[currentIndex].scrollIntoView({ behavior: "smooth", inline: "center", block: "center" });
 });
 
 // 3. LOGICA DE ABRIR FILME OU SÉRIE
@@ -108,12 +91,8 @@ function abrirConteudo(item) {
     const chave = "VOLTTI5";
     if (localStorage.getItem("voltti_chave") !== chave) {
         const senha = prompt("Insira sua Chave Mensal:");
-        if (senha === chave) {
-            localStorage.setItem("voltti_chave", chave);
-        } else {
-            alert("Chave Incorreta!");
-            return;
-        }
+        if (senha === chave) { localStorage.setItem("voltti_chave", chave); }
+        else { return; }
     }
 
     if (item.episodios) {
@@ -123,11 +102,25 @@ function abrirConteudo(item) {
     }
 }
 
+// 4. FUNÇÃO DAR PLAY COM AUTOMATIZAÇÃO PARA TV
 function darPlayTV(id, titulo) {
-    player.src = `https://drive.google.com/file/d/${id}/preview`;
+    // Carrega o vídeo com tentativa de autoplay
+    player.src = `https://drive.google.com/file/d/${id}/preview?autoplay=1`;
     titleDisplay.innerText = titulo;
-    // Opcional: focar o player no topo ao dar play
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    
+    // Sobe a tela automaticamente para o player (Foco no vídeo)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Tenta colocar o iframe em Tela Cheia (Fullscreen)
+    setTimeout(() => {
+        if (player.requestFullscreen) {
+            player.requestFullscreen();
+        } else if (player.webkitRequestFullscreen) { /* Safari/Chrome TV */
+            player.webkitRequestFullscreen();
+        } else if (player.msRequestFullscreen) { /* IE11/Edge */
+            player.msRequestFullscreen();
+        }
+    }, 1000); // Aguarda 1 segundo para o carregamento do link
 }
 
 function exibirEpisodiosTV(serie) {
@@ -144,5 +137,4 @@ function exibirEpisodiosTV(serie) {
     darPlayTV(serie.episodios[0].videoID, `${serie.titulo} - ${serie.episodios[0].nome}`);
 }
 
-// INICIALIZAR SITE TV
 renderizarTV();
