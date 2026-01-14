@@ -1,13 +1,15 @@
-/* 1. BASE CINEMATOGRÁFICA */
+/* 1. RESET E FUNDO CINEMATOGRÁFICO */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 body { 
-    background: #050505; 
+    background: radial-gradient(circle at top, #1a1a1a 0%, #050505 100%);
     color: white; 
-    font-family: 'Segoe UI', sans-serif; 
-    overflow: hidden; /* Trava o scroll da página inteira */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden; /* Evita rolagem lateral da página toda */
+    height: 100vh;
 }
 
-/* 2. CONTAINER PRINCIPAL */
+/* 2. ESTRUTURA PRINCIPAL */
 .tv-container {
     display: flex;
     flex-direction: column;
@@ -15,71 +17,120 @@ body {
     width: 100vw;
 }
 
-/* 3. ÁREA DO VÍDEO (TOP) */
+/* 3. ÁREA DO PLAYER (DESTAQUE NO TOPO) */
 .player-area {
-    height: 60%;
+    height: 55%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to bottom, #111, #050505);
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.9));
+    padding: 20px;
 }
 
 #main-player {
     width: 75%;
-    height: 80%;
-    border-radius: 12px;
-    border: 2px solid #222;
-    box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    height: 85%;
+    border-radius: 15px;
+    border: 1px solid #333;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
 #video-title {
     margin-top: 15px;
-    font-size: 2em;
+    font-size: 2.2em;
     font-weight: bold;
-    color: #e50914; /* Vermelho VOLTTI */
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    text-align: center;
 }
 
-/* 4. TRILHO DE FILMES (BOTTOM) - ONDE ESTAVA O ERRO */
-.catalog-area {
-    height: 40%;
+/* 4. ÁREA DO CATÁLOGO (FILEIRAS) */
+#movie-grid {
+    height: 45%;
+    overflow-y: auto; /* Permite navegar entre as categorias para baixo */
+    padding: 20px 60px 100px 60px;
+    scroll-behavior: smooth;
+}
+
+/* Estilização da barra de rolagem para ficar invisível (estilo Smart TV) */
+#movie-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* 5. ORGANIZAÇÃO DAS CATEGORIAS */
+.genero-container {
+    margin-bottom: 40px;
     display: flex;
-    align-items: center;
-    padding: 0 50px;
-    gap: 25px;
-    overflow-x: hidden; /* Oculta a barra de rolagem */
-    white-space: nowrap; /* Força tudo a ficar em uma linha só */
+    flex-direction: column;
 }
 
-/* 5. CARDS DOS FILMES */
+.genero-titulo {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+    color: #e5e5e5;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.genero-linha {
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    overflow-x: hidden; /* O JS controla o foco lateral */
+}
+
+/* 6. CARDS DOS FILMES (POSTERS) */
 .focusable {
-    display: inline-block; /* Mantém um ao lado do outro */
-    min-width: 200px;
-    width: 200px;
-    height: 300px;
-    background: #1a1a1a;
+    min-width: 190px;
+    max-width: 190px;
+    height: 270px;
+    background: #111;
     border-radius: 10px;
-    border: 4px solid transparent;
-    transition: all 0.3s ease;
-    opacity: 0.5;
-}
-
-/* EFEITO DE FOCO (CONTROLE REMOTO) */
-.focusable.active {
-    transform: scale(1.1);
-    border-color: #e50914;
-    box-shadow: 0 0 30px rgba(229, 9, 20, 0.4);
-    opacity: 1;
-    z-index: 10;
+    border: 3px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    position: relative;
+    opacity: 0.6; /* Itens não focados ficam mais apagados */
 }
 
 .focusable img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 6px;
 }
 
-.focusable p {
-    display: none; /* Esconde o texto para focar na imagem como na Netflix */
+/* 7. FOCO ATIVO (EFEITO CONTROLE REMOTO) */
+.focusable.active {
+    transform: scale(1.15); /* Aumenta o tamanho ao selecionar */
+    border-color: #e50914; /* Vermelho VOLTTI */
+    box-shadow: 0 0 30px rgba(229, 9, 20, 0.6);
+    opacity: 1; /* Fica 100% nítido */
+    z-index: 10;
+}
+
+/* 8. LISTA DE EPISÓDIOS (PARA DORAMAS/SÉRIES) */
+#lista-eps {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-episodio {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-episodio:hover {
+    background: #e50914;
+    border-color: #e50914;
 }
