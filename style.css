@@ -1,38 +1,60 @@
+/* RESET E PADRÃO VOLTTI */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { 
-    background-color: #050505; color: white; 
-    font-family: 'Segoe UI', sans-serif; overflow: hidden; /* TV não tem scroll de mouse */
+body { background-color: #0f1014; color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow-x: hidden; }
+
+/* HEADER TRANSPARENTE ESTILO STREAMING */
+header {
+    height: 70px; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 4%; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+    position: fixed; width: 100%; top: 0; z-index: 1000; transition: background 0.5s;
 }
 
-.tv-container { display: flex; flex-direction: column; height: 100vh; }
+.logo { color: #e50914; font-size: 1.8em; font-weight: bold; letter-spacing: 1px; cursor: pointer; }
 
-.player-area { height: 50%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-#main-player { width: 70%; height: 80%; border: 2px solid #222; border-radius: 10px; }
+/* NAVEGAÇÃO */
+.nav-links { display: flex; list-style: none; gap: 20px; }
+.nav-links a { color: #e5e5e5; text-decoration: none; font-size: 0.85em; transition: 0.3s; }
+.nav-links a:hover { color: #b3b3b3; }
 
-#video-title { margin-top: 10px; font-size: 2em; color: #e50914; }
-
-.catalog-area { 
-    height: 50%; padding: 20px 50px; 
-    display: flex; gap: 30px; overflow-x: hidden; align-items: center;
+/* ÁREA DO PLAYER (O DESTAQUE) */
+.hero-player { 
+    width: 100%; height: 70vh; position: relative; 
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: 50px; background: #000;
 }
+.player-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+.player-container iframe { width: 100%; height: 100%; }
 
-/* CARDS PARA TV */
-.focusable {
-    min-width: 220px; transition: 0.3s; 
-    border: 4px solid transparent; border-radius: 15px;
-    background: #1a1a1a; text-align: center;
+.player-info { 
+    position: relative; z-index: 2; padding-left: 4%; width: 50%;
+    background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
 }
+#video-title { font-size: 3em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-/* EFEITO QUANDO O CONTROLE ESTÁ EM CIMA */
-.focusable.active {
-    transform: scale(1.15);
-    border-color: #e50914;
-    box-shadow: 0 0 30px rgba(229, 9, 20, 0.6);
-    z-index: 10;
+/* CARROSSEL ESTILO NETFLIX */
+.content-grid { margin-top: -50px; position: relative; z-index: 10; padding-left: 4%; }
+.genero-secao { margin-bottom: 35px; }
+.genero-titulo { font-size: 1.4vw; color: #e5e5e5; margin-bottom: 10px; font-weight: bold; }
+
+.genero-linha { 
+    display: flex; gap: 10px; overflow-x: scroll; overflow-y: hidden; 
+    padding: 10px 0 20px 0; scroll-behavior: smooth;
 }
+.genero-linha::-webkit-scrollbar { display: none; } /* Esconde a barra de rolagem */
 
-.focusable img { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; }
-.focusable p { padding: 10px; font-size: 1.2em; font-weight: bold; }
+/* CARD NETFLIX */
+.card { 
+    min-width: 220px; position: relative; transition: transform 0.3s; 
+    cursor: pointer; border-radius: 4px; overflow: hidden;
+}
+.card:hover { transform: scale(1.1); z-index: 20; }
+.card img { width: 100%; height: 125px; object-fit: cover; }
+.card p { 
+    position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7);
+    font-size: 0.8em; padding: 5px; text-align: center; opacity: 0; transition: 0.3s;
+}
+.card:hover p { opacity: 1; }
 
-.tv-episodes { display: flex; gap: 10px; margin-top: 10px; }
-.btn-ep.active { background: #e50914; color: white; transform: scale(1.1); }
+/* FOOTER */
+footer { padding: 50px; text-align: center; background: #0f1014; border-top: 1px solid #333; }
+.footer-links a { color: #808080; margin: 0 15px; text-decoration: none; font-size: 0.9em; }
